@@ -1,14 +1,14 @@
 services:
   backend:
     build:
-      context: ./code/backend
+      context: ./src/backend
       dockerfile: Dockerfile
     container_name: ip_shakti_backend
     restart: unless-stopped
     ports:
       - "8000:8000"
     env_file:
-      - ./code/backend/.env
+      - ./src/backend/.env
     environment:
       - PORT=8000
       - WORKERS=2
@@ -24,7 +24,7 @@ services:
 
   frontend:
     build:
-      context: ./code/frontend
+      context: ./src/frontend
       dockerfile: Dockerfile
       args:
         # Browser clients make API calls directly to the exposed backend host/port

@@ -127,7 +127,7 @@ PS_26045/
 ├── assets/
 │   └── screenshots/
 │       └── README.md                   # UI walkthrough screenshots guide
-└── code/
+└── src/
     ├── backend/                        # FastAPI + LangGraph core service
     │   ├── app/
     │   │   ├── api/routes/             # Chat, Audit, Health routes
@@ -179,8 +179,8 @@ git clone https://github.com/punitr2007/PS_26045.git
 cd PS_26045
 
 # 2. Configure environment
-cp code/backend/.env.example code/backend/.env
-# Add your GEMINI_API_KEY, GROQ_API_KEY, and QDRANT credentials in code/backend/.env
+cp src/backend/.env.example src/backend/.env
+# Add your GEMINI_API_KEY, GROQ_API_KEY, and QDRANT credentials in src/backend/.env
 
 # 3. Build and launch all services
 docker compose up --build
@@ -194,7 +194,7 @@ docker compose up --build
 
 #### 1. Start FastAPI Backend
 ```bash
-cd code/backend
+cd src/backend
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -207,7 +207,7 @@ uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload
 
 #### 2. Start React 18 Frontend
 ```bash
-cd code/frontend
+cd src/frontend
 npm install
 npm run dev
 ```

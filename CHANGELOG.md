@@ -65,7 +65,7 @@ Simple result: A "classical" formulation query retrieves TKDL and D&C Act sectio
 ---
 
 ## Fix 9 — Restructured abs_rag.csv to canonical 17-column schema
-File: code/ingestion/data/abs_rag.csv
+File: src/ingestion/data/abs_rag.csv
 
 What was wrong:
 `abs_rag.csv` contained mixed tabs and commas, an extra unneeded Google Drive link column from sheet exports, mismatched column alignment, and was missing the `applicable_product` column required by the ingestion pipeline. Multi-identifier names in `pdf_path` needed to be strictly preserved so the ingestion system can match documents against disk files.
@@ -82,7 +82,7 @@ Simple result: `abs_rag.csv` is now valid, standard CSV ready for direct consump
 ---
 
 ## Fix 10 — Fixed CSV BOM reading & directory false-positive path resolution
-File: code/ingestion/structure/models.py
+File: src/ingestion/structure/models.py
 
 What was wrong:
 1. `LegalDocumentConfig.load_from_csv` opened CSV files with `encoding="utf-8"`, causing CSVs with UTF-8 BOM headers to produce key `\ufeffpdf_path` instead of `pdf_path`. This resulted in `clean_path = ""` for all rows.
@@ -99,7 +99,7 @@ Simple result: 53 out of 56 documents now resolve directly to valid PDF files on
 ---
 
 ## Fix 11 — Resolved Qdrant 400 "Index required for legal_area" and nested payload mismatch
-Files: app/retrieval/hybrid_retriever.py, code/ingestion/vectorstore/manager.py
+Files: app/retrieval/hybrid_retriever.py, src/ingestion/vectorstore/manager.py
 
 What was wrong:
 1. `_build_legal_area_filter()` queried top-level `key="legal_area"`, whereas LangChain `QdrantVectorStore` stores payload fields under `metadata` (e.g. `metadata.legal_area`).
@@ -109,7 +109,7 @@ What was wrong:
 
 What was fixed:
 - Created missing keyword and text indexes in Qdrant Cloud across all three collections for both `metadata.*` and top-level fields (`legal_area`, `metadata.legal_area`, `applicable_product`, `metadata.applicable_product`).
-- Updated `code/ingestion/vectorstore/manager.py` to automatically create these indexes on any newly created collection.
+- Updated `src/ingestion/vectorstore/manager.py` to automatically create these indexes on any newly created collection.
 - Updated `_build_legal_area_filter()` in `hybrid_retriever.py` to query both `metadata.legal_area` and `legal_area`, and added alias expansion (`abs` <-> `biodiversity` <-> `ABS / Biodiversity`).
 - Added cascading fallbacks in `retrieve()`: `combined_filter` -> `legal_area filter` -> `unfiltered search`, guaranteeing that missing indexes never drop retrieval candidates to 0.
 
@@ -234,7 +234,7 @@ Simple result: Section 3(p) decisively beats irrelevant chunks and takes top ran
 ---
 
 ### Enhancement 11 — Frontend Statute Identifier Mapping & Leak Elimination
-- **Files**: `code/backend/app/services/chatbot_service.py`, `code/backend/app/schemas/schemas.py`, `code/frontend/src/components/sahayak/MessageBubble.tsx`, `code/frontend/src/lib/sahayak.ts`
+- **Files**: `src/backend/app/services/chatbot_service.py`, `src/backend/app/schemas/schemas.py`, `src/frontend/src/components/sahayak/MessageBubble.tsx`, `src/frontend/src/lib/sahayak.ts`
 - **What was wrong**:
   - Internal database metadata (`L0-L7` authority levels, raw IDs like `L0-IN-PAT-3P`) leaked into user citation chips and footers.
   - Frontend had to guess statute types from raw strings, leading to broken drawer views or default fallbacks to Section 3(p) for unrelated laws (like Biological Diversity Act).
@@ -247,7 +247,7 @@ Simple result: Section 3(p) decisively beats irrelevant chunks and takes top ran
 ---
 
 ### Enhancement 12 — Multi-Turn Session Fact Persistence (`MemoryService`)
-- **Files**: `code/backend/app/services/memory_service.py`, `code/backend/app/api/routes/chat.py`
+- **Files**: `src/backend/app/services/memory_service.py`, `src/backend/app/api/routes/chat.py`
 - **What was wrong**:
   - In a multi-turn clarification dialogue, if the user answered a clarification question on Turn 2, the product category or ingredients identified in Turn 1 were lost unless passed explicitly in every client payload.
 - **What was fixed**:
@@ -258,7 +258,7 @@ Simple result: Section 3(p) decisively beats irrelevant chunks and takes top ran
 ---
 
 ### Enhancement 13 — Formulation Audit Pre-Screening Engine (`POST /api/v1/audit`)
-- **Files**: `code/backend/app/api/routes/audit.py`, `code/backend/app/main.py`, `code/frontend/src/components/sahayak/AuditDrawer.tsx`, `code/frontend/src/lib/sahayak.ts`
+- **Files**: `src/backend/app/api/routes/audit.py`, `src/backend/app/main.py`, `src/frontend/src/components/sahayak/AuditDrawer.tsx`, `src/frontend/src/lib/sahayak.ts`
 - **What was added**:
   - Created a dedicated automated patentability pre-screening endpoint: `POST /api/v1/audit`.
   - Reuses the multi-domain RAG retrieval and legal reranker engine to assess patentability risks against:
@@ -272,7 +272,7 @@ Simple result: Section 3(p) decisively beats irrelevant chunks and takes top ran
 ---
 
 ### Enhancement 14 — Local LLM Stability & Timeout Protection
-- **Files**: `code/backend/app/llm/providers.py`
+- **Files**: `src/backend/app/llm/providers.py`
 - **What was wrong**:
   - Local LLMs running in LM Studio (`qwen3-4b-2507`) could enter infinite generation loops on complex legal prompts or hang indefinitely if an HTTP call stalled.
 - **What was fixed**:
@@ -282,7 +282,7 @@ Simple result: Section 3(p) decisively beats irrelevant chunks and takes top ran
 ---
 
 ### Enhancement 15 — Qdrant Dual-Schema Filter Support
-- **Files**: `code/backend/app/retrieval/hybrid_retriever.py`, `code/backend/app/retrieval/patent_rag.py`, `code/backend/app/retrieval/abs_rag.py`
+- **Files**: `src/backend/app/retrieval/hybrid_retriever.py`, `src/backend/app/retrieval/patent_rag.py`, `src/backend/app/retrieval/abs_rag.py`
 - **What was fixed**:
   - Updated Qdrant filter generation to match both top-level `legal_area` and nested `metadata.legal_area` payloads.
   - Aligned default collection names to `legal_acts` and `biodiversity_acts`.
@@ -291,7 +291,7 @@ Simple result: Section 3(p) decisively beats irrelevant chunks and takes top ran
 ---
 
 ### Enhancement 16 — React 18 Production Frontend
-- **Files**: `code/frontend/`
+- **Files**: `src/frontend/`
 - **What was added**:
   - Complete, modern frontend built with **React 18**, **Vite**, **TypeScript**, and **Tailwind CSS**.
   - **Design System**: Emerald/Obsidian dark-mode palette, subtle glassmorphism, responsive drawer layout.
@@ -313,7 +313,7 @@ Simple result: Section 3(p) decisively beats irrelevant chunks and takes top ran
 ---
 
 ### Enhancement 18 — 12-Suite Automated Regression Test Harness
-- **File**: `code/backend/test_clarification_and_reranker.py`
+- **File**: `src/backend/test_clarification_and_reranker.py`
 - **What was added**:
   - Complete 12-test automated regression suite verifying:
     1. Doctrinal query bypass (Taila formulation) — No clarification loop.
@@ -349,6 +349,6 @@ Simple result: Section 3(p) decisively beats irrelevant chunks and takes top ran
 | **API** | Formulation Audit Pre-Screening (`/api/v1/audit`) | `app/api/routes/audit.py`, `app/main.py` | 🌟 Enhanced |
 | **LLM Stability**| LM Studio Token Bounds (`max_tokens=1024`, 180s Timeout) | `app/llm/providers.py` | 🌟 Enhanced |
 | **Vector Store**| Qdrant Dual-Schema (`legal_area` & `metadata.legal_area`) | `app/retrieval/hybrid_retriever.py` | 🌟 Enhanced |
-| **Frontend** | React 18 + Vite + Tailwind CSS Workspace & Drawers | `code/frontend/` | 🌟 Enhanced |
+| **Frontend** | React 18 + Vite + Tailwind CSS Workspace & Drawers | `src/frontend/` | 🌟 Enhanced |
 | **Docs** | 6 Prerequisites Blueprint Documents Synchronized | `prerequisites/*.md` | 🌟 Enhanced |
 | **Testing** | 12-Suite Automated Regression Harness (12/12 Passing) | `test_clarification_and_reranker.py` | 🌟 Enhanced |

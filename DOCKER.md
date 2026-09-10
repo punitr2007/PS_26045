@@ -9,10 +9,10 @@ This guide explains how to build, test, and deploy both the **FastAPI Backend** 
 To build and run both the frontend and backend together:
 
 ### 1. Configure Backend Environment
-Ensure your `.env` exists in `code/backend/.env`:
+Ensure your `.env` exists in `src/backend/.env`:
 ```bash
-cp code/backend/.env.example code/backend/.env
-# Edit code/backend/.env with your GEMINI_API_KEY, QDRANT_URL, etc.
+cp src/backend/.env.example src/backend/.env
+# Edit src/backend/.env with your GEMINI_API_KEY, QDRANT_URL, etc.
 ```
 
 ### 2. Start All Services
@@ -39,13 +39,13 @@ docker compose down
 
 ## 📦 Individual Service Builds
 
-### 1. Backend (`code/backend`)
+### 1. Backend (`src/backend`)
 
 The backend uses a lightweight Python 3.12 slim image with `uv` for fast dependency installation.
 
 #### Build the Image
 ```bash
-docker build -t ip-shakti-backend ./code/backend
+docker build -t ip-shakti-backend ./src/backend
 ```
 
 #### Run the Container
@@ -53,14 +53,14 @@ docker build -t ip-shakti-backend ./code/backend
 docker run -d \
   --name ip-shakti-backend \
   -p 8000:8000 \
-  --env-file ./code/backend/.env \
+  --env-file ./src/backend/.env \
   -v backend_checkpoints:/app/checkpoints \
   ip-shakti-backend
 ```
 
 ---
 
-### 2. Frontend (`code/frontend`)
+### 2. Frontend (`src/frontend`)
 
 The frontend is a TanStack Start / Nitro SSR application built using a multi-stage Dockerfile (`node:20-alpine`) with `pnpm`.
 
@@ -72,7 +72,7 @@ The frontend is a TanStack Start / Nitro SSR application built using a multi-sta
 docker build \
   --build-arg VITE_BACKEND_URL=http://localhost:8000 \
   -t ip-shakti-frontend \
-  ./code/frontend
+  ./src/frontend
 ```
 
 For production domain deployment:
@@ -80,7 +80,7 @@ For production domain deployment:
 docker build \
   --build-arg VITE_BACKEND_URL=https://api.yourdomain.com \
   -t ip-shakti-frontend \
-  ./code/frontend
+  ./src/frontend
 ```
 
 #### Run the Container
