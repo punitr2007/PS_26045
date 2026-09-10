@@ -4,7 +4,7 @@ Upload the **final SIH presentation (PPT/PPTX)** in this `submission/` folder an
 
 ## Presentation file
 
-- **PPT File:** `[Open Final Presentation](./IP_SAKTI_Sahayak_SIH2026_Presentation.pptx)`
+- **Presentation:** [Open Final Presentation (PDF)](./SIH_2026_PPT_PS_26045.pdf)
 
 ### Requirements
 

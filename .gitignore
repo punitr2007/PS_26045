@@ -68,9 +68,11 @@ out/
 Thumbs.db
 *.log
 
-# Raw Data PDFs
+# Raw Data PDFs (data folder only)
 data/*.pdf
-*.pdf
+!submission/*.pdf
+!submission/*.pptx
+!submission/*.ppt
 
 # Tests (ignored for now)
 tests/
