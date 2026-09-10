@@ -1,0 +1,82 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+# lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment Variables & Secrets
+.env
+.env.*
+!.env.example
+*.local
+
+/models/
+*.bin
+*.safetensors
+*.pt
+*.onnx
+*.h5
+.cache/
+huggingface/
+
+# Local Vector Databases & SQLite
+chroma_db/
+**/chroma_db/**
+*.sqlite
+*.sqlite3
+*.db
+
+# Node / Frontend / Backend
+node_modules/
+**/node_modules/**
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.next/
+out/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+
+# Raw Data PDFs
+data/*.pdf
+*.pdf
+
+# Tests (ignored for now)
+tests/
+**/tests/**
+
+
+#log files
+log/
+
+checkpoints/

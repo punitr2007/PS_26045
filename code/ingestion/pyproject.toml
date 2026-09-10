@@ -1,0 +1,32 @@
+[project]
+name = "ip-shakti"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "ipynb>=0.5.1",
+    "jupyter>=1.1.1",
+    "kernel>=0.96.0",
+    "langchain>=1.3.17",
+    "langchain-chroma>=1.1.0",
+    "langchain-community>=0.4.2",
+    "langchain-google-genai>=4.3.5",
+    "langchain-groq>=1.1.3",
+    "langchain-huggingface>=1.2.2",
+    "langchain-openai>=1.6.0",
+    "langchain-qdrant>=1.1.0",
+    "langgraph>=1.2.11",
+    "loguru>=0.7.3",
+    "pdfplumber>=0.11.10",
+    "pymupdf>=1.28.2",
+    "python-dotenv>=1.2.3",
+    "qdrant-client>=1.19.0",
+    "rapidocr>=3.9.2",
+    "sentence-transformers>=6.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
